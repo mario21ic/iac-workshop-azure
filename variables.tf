@@ -1,8 +1,10 @@
+/*
 variable "resource_group_name_prefix" {
     type = string
-    description = "Nombre del project"
+    description = "Prefijo para los recursos del project"
     default = "demo"
 }
+*/
 
 variable "resource_group_location" {
     type = string
