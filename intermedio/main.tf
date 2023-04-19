@@ -6,11 +6,28 @@ resource "azurerm_virtual_network" "my_terraform_network" {
   resource_group_name = data.azurerm_resource_group.rg.name
 }
 
+module "myvnet" {
+  source = "./tfmodules/virtual_network"
+  
+  name   = "myVnet"
+  location = data.azurerm_resource_group.rg.location
+  resource_group_name = data.azurerm_resource_group.rg.name
+}
+
+module "myvnet2" {
+  source = "./tfmodules/virtual_network"
+  
+  name   = "miVnet2"
+  location = data.azurerm_resource_group.rg.location
+  resource_group_name = data.azurerm_resource_group.rg.name
+}
+
 # Create subnet
 resource "azurerm_subnet" "my_terraform_subnet" {
   name                 = "mySubnet"
   resource_group_name  = data.azurerm_resource_group.rg.name
-  virtual_network_name = azurerm_virtual_network.my_terraform_network.name
+  virtual_network_name = azurerm_virtual_network.my_terraform_network.name # dependencia por recurso
+  # virtual_network_name = module.myvnet.vnet_name # dependencia por modulo
   address_prefixes     = ["10.0.1.0/24"]
 }
 
@@ -88,10 +105,11 @@ resource "tls_private_key" "example_ssh" {
 
 # Create virtual machine
 resource "azurerm_linux_virtual_machine" "my_terraform_vm" {
-  name                  = "myVM"
+  # name                  = "myVM"
+  name                  = "myLinuxVM"
   location              = data.azurerm_resource_group.rg.location
   resource_group_name   = data.azurerm_resource_group.rg.name
-  network_interface_ids = [azurerm_network_interface.my_terraform_nic.id]
+  network_interface_ids = [azurerm_network_interface.my_terraform_nic.id] # dependencia
   #size                  = "Standard_DS1_v2"
   size                  = "Standard_B1s"
 
