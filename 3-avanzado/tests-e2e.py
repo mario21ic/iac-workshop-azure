@@ -1,6 +1,8 @@
 from tf2 import Tf2, LocalCommandExecutor
 
+# Iniciando test framework
 tf2 = Tf2()
+
 
 @tf2.test("resources.azurerm_public_ip.my_terraform_public_ip")
 def test_nginx_access(self):

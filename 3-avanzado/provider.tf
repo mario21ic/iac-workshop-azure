@@ -7,3 +7,8 @@ provider "consul" {
   datacenter = "dc1"
 }
 
+variable "token" {}
+provider "vault" {
+  address = "http://localhost:8200"
+  token   = var.token
+}

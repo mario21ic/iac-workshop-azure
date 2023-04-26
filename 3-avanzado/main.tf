@@ -1,24 +1,26 @@
-locals {
-  network_name  = "${terraform.workspace}-myVnet"
-  subnet_name   = "${terraform.workspace}-mySubnet"
-  nic_name      = "${terraform.workspace}-myNIC"
-  public_ip_name = "${terraform.workspace}-myPublicIP"
-  vm_name       = "${terraform.workspace}-myLinuxVM"
-}
+# locals {
+#   network_name  = "${terraform.workspace}-myVnet" # default-myVnet, dev-myVnet, prod-myVnet
+#   subnet_name   = "${terraform.workspace}-mySubnet"
+#   nic_name      = "${terraform.workspace}-myNIC"
+#   public_ip_name = "${terraform.workspace}-myPublicIP"
+#   vm_name       = "${terraform.workspace}-myLinuxVM"
+# }
 
 
 # Create virtual network
 resource "azurerm_virtual_network" "my_terraform_network" {
-  # name                = "myVnet"
-  name                = local.network_name
+  name                = "myVnet"
+  # name                = local.network_name
   address_space       = ["10.0.0.0/16"]
   
-  location            = data.azurerm_resource_group.rg.location
-  resource_group_name = data.azurerm_resource_group.rg.name
+  # data
+  # location            = data.azurerm_resource_group.rg.location
+  # resource_group_name = data.azurerm_resource_group.rg.name
   # consul
-  # location            = data.consul_keys.resource_group_location.var.resource_group_location
-  # resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
+  location            = data.consul_keys.resource_group_location.var.resource_group_location
+  resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
   
+  # Para los test de Policy as Code
   tags = {
     environment = terraform.workspace
     tool        = "terraform"
@@ -26,7 +28,8 @@ resource "azurerm_virtual_network" "my_terraform_network" {
 }
 
 # module "myvnet" {
-#   source = "github.com/mario21ic/azure_virtual_network?ref=v1.2" # usando una version
+#   source = "github.com/mario21ic/azure_virtual_network?ref=v1.2" # usando tag
+#   # source = "github.com/mario21ic/azure_virtual_network" # usando branch main
 #   name   = "myVnet"
 #   location = data.azurerm_resource_group.rg.location
 #   resource_group_name = data.azurerm_resource_group.rg.name
@@ -34,18 +37,19 @@ resource "azurerm_virtual_network" "my_terraform_network" {
 
 # Create subnet
 resource "azurerm_subnet" "my_terraform_subnet" {
-  # name                 = "mySubnet"
-  name                 = local.subnet_name
+  name                 = "mySubnet"
+  # name                 = local.subnet_name
   
-  resource_group_name  = data.azurerm_resource_group.rg.name
+  # data
+  # resource_group_name  = data.azurerm_resource_group.rg.name
   # consul
-  # resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
+  resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
 
   virtual_network_name = azurerm_virtual_network.my_terraform_network.name # dependencia por recurso
   # virtual_network_name = module.myvnet.vnet_name # dependencia por modulo
   address_prefixes     = ["10.0.1.0/24"]
   
-  # NO soportado
+  # NO esta soportado
   # tags = {
   #   environment = terraform.workspace
   #   tool        = "terraform"
@@ -54,17 +58,19 @@ resource "azurerm_subnet" "my_terraform_subnet" {
 
 # Create public IPs
 resource "azurerm_public_ip" "my_terraform_public_ip" {
-  # name                = "myPublicIP"
-  name                = local.public_ip_name
+  name                = "myPublicIP"
+  # name                = local.public_ip_name
   
-  location            = data.azurerm_resource_group.rg.location
-  resource_group_name = data.azurerm_resource_group.rg.name
+  # data
+  # location            = data.azurerm_resource_group.rg.location
+  # resource_group_name = data.azurerm_resource_group.rg.name
   # consul
-  # location            = data.consul_keys.resource_group_location.var.resource_group_location
-  # resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
+  location            = data.consul_keys.resource_group_location.var.resource_group_location
+  resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
   
   allocation_method   = "Dynamic"
 
+  # Para los test de Policy as Code
   tags = {
     environment = terraform.workspace
     tool        = "terraform"
@@ -75,11 +81,12 @@ resource "azurerm_public_ip" "my_terraform_public_ip" {
 resource "azurerm_network_security_group" "my_terraform_nsg" {
   name                = "myNetworkSecurityGroup"
   
-  location            = data.azurerm_resource_group.rg.location
-  resource_group_name = data.azurerm_resource_group.rg.name
+  # data
+  # location            = data.azurerm_resource_group.rg.location
+  # resource_group_name = data.azurerm_resource_group.rg.name
   # consul
-  # location            = data.consul_keys.resource_group_location.var.resource_group_location
-  # resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
+  location            = data.consul_keys.resource_group_location.var.resource_group_location
+  resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
 
   security_rule {
     name = "http"
@@ -109,15 +116,15 @@ resource "azurerm_network_security_group" "my_terraform_nsg" {
 
 # Create network interface
 resource "azurerm_network_interface" "my_terraform_nic" {
-  # name                = "myNIC"
-  name                = local.nic_name
+  name                = "myNIC"
+  # name                = local.nic_name
   
-  location            = data.azurerm_resource_group.rg.location
-  resource_group_name = data.azurerm_resource_group.rg.name
-  
+  # data
+  # location            = data.azurerm_resource_group.rg.location
+  # resource_group_name = data.azurerm_resource_group.rg.name
   # consul
-  # location            = data.consul_keys.resource_group_location.var.resource_group_location
-  # resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
+  location            = data.consul_keys.resource_group_location.var.resource_group_location
+  resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
 
   ip_configuration {
     name                          = "my_nic_configuration"
@@ -126,6 +133,7 @@ resource "azurerm_network_interface" "my_terraform_nic" {
     public_ip_address_id          = azurerm_public_ip.my_terraform_public_ip.id
   }
 
+  # Para los test de Policy as Code
   tags = {
     environment = terraform.workspace
     tool        = "terraform"
@@ -163,17 +171,23 @@ resource "azurerm_network_interface_security_group_association" "example" {
 #   rsa_bits  = 4096
 # }
 
+# Recuperando clave desde Vault
+data "vault_generic_secret" "miclave" {
+  path = "secret/miclave"
+}
+
 # Create virtual machine
 resource "azurerm_linux_virtual_machine" "my_terraform_vm" {
   # name                  = "myVM"
-  # name                  = "myLinuxVM"
-  name                  = local.vm_name
+  name                  = "myLinuxVM"
+  # name                  = local.vm_name # no funciona con terraform test
   
-  location              = data.azurerm_resource_group.rg.location
-  resource_group_name   = data.azurerm_resource_group.rg.name
+  # data
+  # location              = data.azurerm_resource_group.rg.location
+  # resource_group_name   = data.azurerm_resource_group.rg.name
   # consul
-  # location            = data.consul_keys.resource_group_location.var.resource_group_location
-  # resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
+  location            = data.consul_keys.resource_group_location.var.resource_group_location
+  resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
 
   network_interface_ids = [azurerm_network_interface.my_terraform_nic.id] # dependencia
   #size                  = "Standard_DS1_v2"
@@ -193,14 +207,17 @@ resource "azurerm_linux_virtual_machine" "my_terraform_vm" {
     version   = "latest"
   }
 
-  # Provisioner para instalar remotamente
+  # Init script para instalar remotamente
   custom_data = base64encode(file("scripts/init.sh"))
 
   computer_name                   = "myvm"
   admin_username                  = "azureuser"
   
   disable_password_authentication = false
-  admin_password = "ClaveYP@ssw0rd1234!"
+
+  # NO debe ser Harcoded
+  # admin_password    = "ClaveYP@ssw0rd1234!"
+  admin_password    = data.vault_generic_secret.miclave.data["miclave"]
   
   # admin_ssh_key {
   #   username   = "azureuser"
@@ -211,6 +228,7 @@ resource "azurerm_linux_virtual_machine" "my_terraform_vm" {
   #   storage_account_uri = azurerm_storage_account.my_storage_account.primary_blob_endpoint
   # }
 
+  # Para los test de Policy as Code
   tags = {
     environment = terraform.workspace
     tool        = "terraform"

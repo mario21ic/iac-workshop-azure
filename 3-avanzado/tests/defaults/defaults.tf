@@ -1,3 +1,4 @@
+# Definir providers
 terraform {
   required_providers {
     test = {
@@ -10,18 +11,19 @@ terraform {
   }
 }
 
+# Usan el recetario principal como modulo main
 module "main" {
-  source = "../../"
-
+  source = "../../" # raiz del project
 }
 
+# Definimos los tests
 resource "test_assertions" "myVnetName" {
   component = "my_terraform_network"
 
   equal "vnet_name" {
     description = "Default name is None"
     got         = module.main.vnet_name # output value
-    # want        = "mivnet" # error
+    # want        = "mivnettttts" # error
     want        = "myVnet" # expected
   }
 }
@@ -32,8 +34,9 @@ resource "test_assertions" "myVmName" {
   equal "vnet_name" {
     description = "Default name is None"
     got         = module.main.vm_name # output value
-    # want        = "mivm" # error
-    want        = "myLinuxVM" # expected
+    want        = "mivm" # error
+    # want        = "myLinuxVM" # expected
+    # want        = "default-myLinuxVM" # no funciona con locals
   }
 }
 

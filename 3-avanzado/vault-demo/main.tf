@@ -16,7 +16,7 @@ provider "vault" {
 resource "vault_generic_secret" "basic" {
   path = "secret/miclave"
   data_json = jsonencode({
-    "miclave" = "miclaveesuperpoderosa"
+    "miclave" = "ClaveYP@ssw0rd1234!"
   })
 }
 
@@ -31,11 +31,15 @@ resource "vault_generic_secret" "example" {
   )
 }
 
-# data "vault_generic_secret" "foo" {
-#   path = "secret/foo"
-# }
-
-# output "demo" {
-#   value = data.vault_generic_secret.foo.data["foo"]
-#   sensitive = true
-# }
+# Recuperar la informacion
+data "vault_generic_secret" "foo" {
+ path = "secret/foo"
+}
+output "foo_value" {
+  value = data.vault_generic_secret.foo.data["foo"]
+  sensitive = true
+}
+output "pizza_value" {
+  value = data.vault_generic_secret.foo.data["pizza"]
+  sensitive = true
+}
