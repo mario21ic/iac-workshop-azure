@@ -6,16 +6,18 @@ resource "azurerm_virtual_network" "my_terraform_network" {
   resource_group_name = data.azurerm_resource_group.rg.name
 }
 
-module "myvnet" {
+module "myvnet1" {
   source = "./tfmodules/virtual_network"
+  # source = "github.com/mario21ic/azure_virtual_network" # main version
   
-  name   = "myVnet"
+  name   = "myVnet1"
   location = data.azurerm_resource_group.rg.location
   resource_group_name = data.azurerm_resource_group.rg.name
 }
 
 module "myvnet2" {
   source = "./tfmodules/virtual_network"
+  # source = "github.com/mario21ic/azure_virtual_network?ref=v1.2" # usando una version
   
   name   = "miVnet2"
   location = data.azurerm_resource_group.rg.location
