@@ -12,10 +12,12 @@ resource "azurerm_virtual_network" "my_terraform_network" {
   # name                = "myVnet"
   name                = local.network_name
   address_space       = ["10.0.0.0/16"]
-  # location            = data.azurerm_resource_group.rg.location
-  # resource_group_name = data.azurerm_resource_group.rg.name
-  location            = data.consul_keys.resource_group_location.var.resource_group_location
-  resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
+  
+  location            = data.azurerm_resource_group.rg.location
+  resource_group_name = data.azurerm_resource_group.rg.name
+  # consul
+  # location            = data.consul_keys.resource_group_location.var.resource_group_location
+  # resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
   
   tags = {
     environment = terraform.workspace
@@ -34,8 +36,11 @@ resource "azurerm_virtual_network" "my_terraform_network" {
 resource "azurerm_subnet" "my_terraform_subnet" {
   # name                 = "mySubnet"
   name                 = local.subnet_name
-  # resource_group_name  = data.azurerm_resource_group.rg.name
-  resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
+  
+  resource_group_name  = data.azurerm_resource_group.rg.name
+  # consul
+  # resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
+
   virtual_network_name = azurerm_virtual_network.my_terraform_network.name # dependencia por recurso
   # virtual_network_name = module.myvnet.vnet_name # dependencia por modulo
   address_prefixes     = ["10.0.1.0/24"]
@@ -51,10 +56,13 @@ resource "azurerm_subnet" "my_terraform_subnet" {
 resource "azurerm_public_ip" "my_terraform_public_ip" {
   # name                = "myPublicIP"
   name                = local.public_ip_name
-  # location            = data.azurerm_resource_group.rg.location
-  # resource_group_name = data.azurerm_resource_group.rg.name
-  location            = data.consul_keys.resource_group_location.var.resource_group_location
-  resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
+  
+  location            = data.azurerm_resource_group.rg.location
+  resource_group_name = data.azurerm_resource_group.rg.name
+  # consul
+  # location            = data.consul_keys.resource_group_location.var.resource_group_location
+  # resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
+  
   allocation_method   = "Dynamic"
 
   tags = {
@@ -66,10 +74,12 @@ resource "azurerm_public_ip" "my_terraform_public_ip" {
 # Create Network Security Group and rule
 resource "azurerm_network_security_group" "my_terraform_nsg" {
   name                = "myNetworkSecurityGroup"
-  # location            = data.azurerm_resource_group.rg.location
-  # resource_group_name = data.azurerm_resource_group.rg.name
-  location            = data.consul_keys.resource_group_location.var.resource_group_location
-  resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
+  
+  location            = data.azurerm_resource_group.rg.location
+  resource_group_name = data.azurerm_resource_group.rg.name
+  # consul
+  # location            = data.consul_keys.resource_group_location.var.resource_group_location
+  # resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
 
   security_rule {
     name = "http"
@@ -101,10 +111,13 @@ resource "azurerm_network_security_group" "my_terraform_nsg" {
 resource "azurerm_network_interface" "my_terraform_nic" {
   # name                = "myNIC"
   name                = local.nic_name
-  # location            = data.azurerm_resource_group.rg.location
-  # resource_group_name = data.azurerm_resource_group.rg.name
-  location            = data.consul_keys.resource_group_location.var.resource_group_location
-  resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
+  
+  location            = data.azurerm_resource_group.rg.location
+  resource_group_name = data.azurerm_resource_group.rg.name
+  
+  # consul
+  # location            = data.consul_keys.resource_group_location.var.resource_group_location
+  # resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
 
   ip_configuration {
     name                          = "my_nic_configuration"
@@ -155,10 +168,13 @@ resource "azurerm_linux_virtual_machine" "my_terraform_vm" {
   # name                  = "myVM"
   # name                  = "myLinuxVM"
   name                  = local.vm_name
-  # location              = data.azurerm_resource_group.rg.location
-  # resource_group_name   = data.azurerm_resource_group.rg.name
-  location            = data.consul_keys.resource_group_location.var.resource_group_location
-  resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
+  
+  location              = data.azurerm_resource_group.rg.location
+  resource_group_name   = data.azurerm_resource_group.rg.name
+  # consul
+  # location            = data.consul_keys.resource_group_location.var.resource_group_location
+  # resource_group_name = data.consul_keys.resource_group_name.var.resource_group_name
+
   network_interface_ids = [azurerm_network_interface.my_terraform_nic.id] # dependencia
   #size                  = "Standard_DS1_v2"
   size                  = "Standard_B1s"
